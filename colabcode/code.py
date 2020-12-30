@@ -46,9 +46,9 @@ class ColabCode:
         for tunnel in active_tunnels:
             public_url = tunnel.public_url
             ngrok.disconnect(public_url)
-        url = ngrok.connect(addr=self.port, proto="https", options={"bind_tls": True})
+        url = ngrok.connect(addr=self.port, options={"bind_tls": True})
         print(f"Code Server can be accessed on: {url}")
-        webbrowser.open_new(url)
+        webbrowser.open_new_tab(url)
 
     def _run_code(self):
         os.system(f"fuser -n tcp -k {self.port}")
