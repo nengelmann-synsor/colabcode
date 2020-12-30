@@ -1,7 +1,6 @@
 import os
 import subprocess
 from pyngrok import ngrok
-from IPython.display import Javascript
 
 try:
     from google.colab import drive
@@ -47,8 +46,9 @@ class ColabCode:
             public_url = tunnel.public_url
             ngrok.disconnect(public_url)
         url = ngrok.connect(addr=self.port, options={"bind_tls": True})
+        https_url = self._get_https_url(url)
+        print(f'\n\nopen code server via https: {https_url}\n\n')
         print(f"Code Server can be accessed on: {url}")
-        self._open_url(url)
 
     def _run_code(self):
         os.system(f"fuser -n tcp -k {self.port}")
@@ -67,6 +67,9 @@ class ColabCode:
         ) as proc:
             for line in proc.stdout:
                 print(line, end="")
-                
-    def _open_url(self, url):
-        display(Javascript('window.open("{url}");'.format(url=url)))
+
+    def _get_https_url(self, url):
+        start = url.find('//', 0, len(url))
+        end = url.find('ngrok.io', 0, len(url))
+        https_url = 'https:'+url[start:end]
+        return https_url
