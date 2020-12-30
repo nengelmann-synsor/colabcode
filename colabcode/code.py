@@ -71,5 +71,5 @@ class ColabCode:
     def _get_https_url(self, url_str):
         start = url_str.find('//', 0, len(url_str))
         end = url_str.find('ngrok.io', 0, len(url_str))
-        https_url = 'https:'+url_str[start:end]
+        https_url = 'https:'+url_str[start:end]+'ngrok.io'
         return https_url
