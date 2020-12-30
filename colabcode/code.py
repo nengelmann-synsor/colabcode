@@ -45,10 +45,10 @@ class ColabCode:
         for tunnel in active_tunnels:
             public_url = tunnel.public_url
             ngrok.disconnect(public_url)
-        url = ngrok.connect(addr=self.port, options={"bind_tls": True})
-        https_url = self._get_https_url(url)
+        NgrokTunnel = ngrok.connect(addr=self.port, options={"bind_tls": True})
+        https_url = self._get_https_url(str(NgrokTunnel))
         print(f'\n\nopen code server via https: {https_url}\n\n')
-        print(f"Code Server can be accessed on: {url}")
+        print(f"Code Server can be accessed on: {NgrokTunnel}")
 
     def _run_code(self):
         os.system(f"fuser -n tcp -k {self.port}")
@@ -68,8 +68,8 @@ class ColabCode:
             for line in proc.stdout:
                 print(line, end="")
 
-    def _get_https_url(self, url):
-        start = url.find('//', 0, len(url))
-        end = url.find('ngrok.io', 0, len(url))
-        https_url = 'https:'+url[start:end]
+    def _get_https_url(self, url_str):
+        start = url_str.find('//', 0, len(url_str))
+        end = url_str.find('ngrok.io', 0, len(url_str))
+        https_url = 'https:'+url_str[start:end]
         return https_url
