@@ -1,7 +1,7 @@
 import os
 import subprocess
-import webbrowser
 from pyngrok import ngrok
+from IPython.display import Javascript
 
 try:
     from google.colab import drive
@@ -48,7 +48,7 @@ class ColabCode:
             ngrok.disconnect(public_url)
         url = ngrok.connect(addr=self.port, options={"bind_tls": True})
         print(f"Code Server can be accessed on: {url}")
-        webbrowser.open_new_tab(url)
+        self._open_url(url)
 
     def _run_code(self):
         os.system(f"fuser -n tcp -k {self.port}")
@@ -67,3 +67,6 @@ class ColabCode:
         ) as proc:
             for line in proc.stdout:
                 print(line, end="")
+                
+    def _open_url(self, url):
+        display(Javascript('window.open("{url}");'.format(url=url)))
